@@ -1,4 +1,5 @@
-# PAT scopes needed: 'repo', 'read:org'
+# PAT scopes needed: 'repo', 'workflow', 'read:org'.
+# Actions must be disabled in the target repo (Settings -> Actions -> General -> Disable actions).
 name: Mirror main to public repo
 
 on:
