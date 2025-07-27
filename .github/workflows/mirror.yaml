@@ -1,0 +1,33 @@
+# PAT scopes needed: 'repo', 'read:org'
+name: Mirror main to public repo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout private repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate gh
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: |
+          git config --unset-all http.https://github.com/.extraheader
+          gh auth setup-git
+          gh auth status
+
+      - name: Force push main to public mirror
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: |
+          git remote add mirror https://github.com/alexzfp/public-copy-mirror.git
+          git push --force mirror main:main
